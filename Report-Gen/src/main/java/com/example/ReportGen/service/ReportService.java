@@ -2,6 +2,7 @@ package com.example.ReportGen.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,9 +12,7 @@ import org.springframework.util.ResourceUtils;
 import javax.management.JMRuntimeException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -99,6 +98,23 @@ public class ReportService {
 
 
         return "Report generated Successfully at : "+reportPath;
+    }
+
+
+    // Map the fields
+    private static class ComplainLogRowMapper implements RowMapper<ComplainLog> {
+        @Override
+        public ComplainLog mapRow(ResultSet rs, int rowNum) throws SQLException {
+            ComplainLog complainLog = new ComplainLog();
+            complainLog.setCID(rs.getLong("cid"));
+            complainLog.setCreatedAt(rs.getTimestamp("created_at"));
+            complainLog.setRoom(rs.getLong("room"));
+            complainLog.setDescription(rs.getString("description"));
+            complainLog.setPropID(rs.getString("propID"));
+            complainLog.setStatus(rs.getString("status"));
+
+            return complainLog;
+        }
     }
 
 }
