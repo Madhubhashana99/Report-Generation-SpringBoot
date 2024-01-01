@@ -65,4 +65,40 @@ public class ReportService {
         return "Report generated Successfully at : "+reportPath;
     }
 
+
+    //Export Monthly Report
+
+    public String exportMonthlyReport() throws FileNotFoundException, JRException {
+        String reportPath = "F:\\Uni Works\\Level 3\\Sem 2\\ADBMS\\Group_Project\\Reports";
+
+        List<ComplainLog> complains=jdbcTemplate.query("CALL GetMonthlyComplainForMonth();", new ComplainLogRowMapper());//Retrieving all the Monthly complains
+
+        //Loading the .jrxml file and Compiling it
+        File file= ResourceUtils.getFile("classpath:monthly_report.jrxml");
+        JasperReport jasperReport= JasperCompileManager.compileReport(file.getAbsolutePath());
+
+        //Mapping List Data into the Report
+        JRBeanCollectionDataSource source=new JRBeanCollectionDataSource(complains);
+        Map<String,Object> parameters=new HashMap<>();
+        parameters.put("Created by","Faculty of Technology");
+
+        // Saving the report file to the database
+        String sql = "INSERT INTO reports (report_name, path, date) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, "Daily"+dateCreated+".pdf");
+            ps.setString(2,reportPath+".pdf");
+            ps.setTimestamp(3, new Timestamp(System.currentTimeMillis())); // set the current date and time
+            return ps;
+        }, keyHolder);
+
+        //Printing the Report
+        JasperPrint print= JasperFillManager.fillReport(jasperReport,parameters,source);
+        JasperExportManager.exportReportToPdfFile(print,reportPath+"\\Monthly_Complains"+System.currentTimeMillis()+".pdf");
+
+
+        return "Report generated Successfully at : "+reportPath;
+    }
+
 }
