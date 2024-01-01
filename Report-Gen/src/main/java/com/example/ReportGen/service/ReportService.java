@@ -1,5 +1,6 @@
 package com.example.ReportGen.service;
 
+import com.example.ReportGen.model.ComplainLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

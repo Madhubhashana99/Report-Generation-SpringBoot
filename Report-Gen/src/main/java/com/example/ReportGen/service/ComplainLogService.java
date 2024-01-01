@@ -1,5 +1,6 @@
 package com.example.ReportGen.service;
 
+import com.example.ReportGen.model.ComplainLog;
 import com.example.ReportGen.repository.ComplainLogRepo;
 import org.springframework.stereotype.Service;
 
