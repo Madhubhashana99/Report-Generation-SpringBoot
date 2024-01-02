@@ -34,8 +34,9 @@ public class ReportService {
 
 
     //Export daily reports
+    @Scheduled(cron = "0 00 22 13 * ?")
     public String exportDailyReport() throws FileNotFoundException, JRException {
-        String reportPath = "F:\\Uni Works\\Level 3\\Sem 2\\ADBMS\\Group_Project\\Reports";
+        String reportPath = "D:\\Reports";
 
         List<ComplainLog> complains= jdbcTemplate.query("CALL GetDailyComplainsForCurrentDate();", new ComplainLogRowMapper());//Retrieving all the daily complains
 
@@ -69,9 +70,9 @@ public class ReportService {
 
 
     //Export Monthly Report
-
+    @Scheduled(cron = "0 00 22 13 * ?")
     public String exportMonthlyReport() throws FileNotFoundException, JRException {
-        String reportPath = "F:\\Uni Works\\Level 3\\Sem 2\\ADBMS\\Group_Project\\Reports";
+        String reportPath = "D:\\Reports";
 
         List<ComplainLog> complains=jdbcTemplate.query("CALL GetMonthlyComplainForMonth();", new ComplainLogRowMapper());//Retrieving all the Monthly complains
 
